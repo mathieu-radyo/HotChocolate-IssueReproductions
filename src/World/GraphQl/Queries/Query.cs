@@ -24,11 +24,10 @@ public static partial class Query
     [UseProjection]
     [UseFiltering]
     [UseSorting]
-    public static async Task<PageConnection<Country>> GetCountriesAsync([Service] WorldContext context, IResolverContext t, PagingArguments pagingArguments, QueryContext<Country> query,  CancellationToken cancellationToken = default)
+    public static async Task<PageConnection<Country>> GetCountriesAsync([Service] WorldContext context, PagingArguments pagingArguments, QueryContext<Country> query,  CancellationToken cancellationToken = default)
     {
         var page = await context.Countries.AsNoTracking()
             .With(query, c => c.IfEmpty(i => i.AddAscending(e => e.Id)))
-            .Project(t)
             .ToPageAsync(pagingArguments, cancellationToken);
         return new PageConnection<Country>(page);
     }
